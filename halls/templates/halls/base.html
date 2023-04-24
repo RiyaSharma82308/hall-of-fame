@@ -20,8 +20,15 @@
         <div class="container-fluid">
             <a class="navbar-brand">My hall of fame</a>
             <form class="d-flex" role="search">
-                <button type="button" class="btn btn-light">Login</button>
-                <button class="btn btn-outline-success" type="submit">Signup</button>
+                {% if user.is_authenticated %}
+                <a class="btn btn-light" href="#">Dashboard</a>
+                <a class="btn btn-outline-danger" href="{% url 'logout' %}">Log Out</a>
+                {% else %}
+                <a class="btn btn-light" href="{% url 'login' %}">Login</a>
+                {% endif %}
+                {% if user.is_authenticated == False %}
+                <a class="btn btn-outline-success" href="{% url 'signup'%}">Signup</a>
+                {% endif %}
             </form>
         </div>
     </nav>
