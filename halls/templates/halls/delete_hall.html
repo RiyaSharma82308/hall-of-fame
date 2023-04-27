@@ -1,0 +1,13 @@
+{% extends 'halls/base.html' %}
+{% block content %}
+<div class="container">
+    <h2>Are you sure to delete this Hall Of Fame?</h2> 
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-danger" >Submit</button>
+    </form>
+
+    <h2><a href="{% url 'detail_hall' hall.id %}" >{{ hall.title }}</a></h2>
+</div>
+{% endblock %}
