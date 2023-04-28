@@ -4,9 +4,9 @@ from django import forms
 class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
-        fields = ['title','url','youtube_id']
+        fields = ['url']
         exclude=()
-        labels = {'youtube_id':'YouTube Id',}
+        labels = {'url':'YouTube Url',}
        
 
 class SearchForm(forms.Form):

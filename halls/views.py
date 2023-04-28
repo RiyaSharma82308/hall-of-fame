@@ -5,7 +5,12 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Hall,Video
 from django.contrib.auth import authenticate, login
 from .forms import VideoForm, SearchForm
+from django.http import Http404
+import urllib
+from django.forms.utils import ErrorList
+import requests
 
+YOUTUBE_API_KEY = 'AIzaSyCduRThyOopSHvNA-ML4Is_Uoy5sTf2l9M'
 
 # Create your views here.
 def home(request):
@@ -17,18 +22,33 @@ def dashboard(request):
 def add_video(request, pk):
     form = VideoForm()
     search_form = SearchForm()
+    hall = Hall.objects.get(pk = pk)
+    if not hall.user == request.user:
+        raise Http404
+
     if request.method == 'POST':
         #create
-        filled_from = VideoForm(request.POST)
-        if filled_from.is_valid():
+        form = VideoForm(request.POST)
+        if form.is_valid():
             video = Video()
-            video.url = filled_from.cleaned_data['url']
-            video.title = filled_from.cleaned_data['title']
-            video.youtube_id = filled_from.cleaned_data['youtube_id']
-            video.hall = Hall.objects.get(pk = pk)
-            video.save()
+            video.hall = hall
+            video.url = form.cleaned_data['url']
+            parsed_url = urllib.parse.urlparse(video.url)
+            video_id = urllib.parse.parse_qs(parsed_url.query).get('v')
+            if video_id:
+                video.youtube_id = video_id[0]
+                response=requests.get(f'https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id={ video_id[0] }&key={YOUTUBE_API_KEY}')
+                json = response.json()
+                title = json['items'][0]['snippet']['title']
+                video.title = title
+                video.save()
+                return redirect('detail_hall', pk)
+            else:
+                errors = form._errors.setdefault('url', ErrorList())
+                errors.append('Needs to be a YouTube URL')           
 
-    return render(request, 'halls/add_video.html', {'form':form, 'search_form': search_form})
+
+    return render(request, 'halls/add_video.html', {'form':form, 'search_form': search_form, 'hall':hall})
 
 class SignUp(generic.CreateView):
     form_class = UserCreationForm
