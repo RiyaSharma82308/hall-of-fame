@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Hall,Video
 from django.contrib.auth import authenticate, login
 from .forms import VideoForm, SearchForm
-from django.http import Http404
+from django.http import Http404, JsonResponse
 import urllib
 from django.forms.utils import ErrorList
 import requests
@@ -49,6 +49,14 @@ def add_video(request, pk):
 
 
     return render(request, 'halls/add_video.html', {'form':form, 'search_form': search_form, 'hall':hall})
+
+def video_search(request):
+    search_form = SearchForm(request.GET)
+    if search_form.is_valid():
+        encoded_search_term=urllib.parse.quote(search_form.cleaned_data['search_term'])
+        response = requests.get(f'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=7&q={  encoded_search_term[0] }&key={YOUTUBE_API_KEY}')
+        return JsonResponse(response.json())
+    return JsonResponse({'error':'not able to validate form'})
 
 class SignUp(generic.CreateView):
     form_class = UserCreationForm
