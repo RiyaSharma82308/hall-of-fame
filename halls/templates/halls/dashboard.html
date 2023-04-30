@@ -3,11 +3,11 @@
 <div class="container">
     <div class="text-center">
         <h1>{{ user.username }}'s Hall of Fames</h1>
-        <a href="{% url 'create_hall' %}" class="btn btn-primary">Create New Hall of Fame</a>
+        <a href="{% url 'create_hall' %}" class="btn btn-primary ">Create New Hall of Fame</a>
     </div>
     {% for hall in halls %}
 
-    <h2><a href="{% url 'detail_hall' hall.id %}">{{ hall.title }}</a></h2>
+    <h2><a href="{% url 'detail_hall' hall.id %} "class="text-decoration-none text-secondary">{{ hall.title }}</a></h2>
     <a href="{% url 'delete_hall' hall.id %}" class="btn btn-danger">Delete</a>
     <a href="{% url 'update_hall' hall.id %}" class="btn btn-primary">Update </a>
     <a href="{% url 'add_video' hall.id %}" class="btn btn-primary">Add Video</a>

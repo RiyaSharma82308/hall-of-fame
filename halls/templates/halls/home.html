@@ -15,7 +15,7 @@
 <div class="container"> 
     <h1 class="text-center">Popular Hall of Fames</h1>
     {% for hall in popular_halls %}
-    <h2><a href="{% url 'detail_hall' hall.id %}" class="text-decoration-none" >{{ hall.title }}</a></h2>
+    <h2><a href="{% url 'detail_hall' hall.id %}" class="text-decoration-none text-secondary" >{{ hall.title }}</a></h2>
     <div class="row">
         {% for video in hall.video_set.all %}
         <div class="col-md-4 mt-3">
@@ -36,7 +36,7 @@
 
     <h1 class="text-center">Recent Hall of Fames</h1>
     {% for hall in recent_halls %}
-    <h2><a href="{% url 'detail_hall' hall.id %}" class="text-decoration-none" >{{ hall.title }}</a></h2>
+    <h2><a href="{% url 'detail_hall' hall.id %}" class="text-decoration-none text-secondary" >{{ hall.title }}</a></h2>
     <div class="row">
         {% for video in hall.video_set.all %}
         <div class="col-md-4 mt-3">
